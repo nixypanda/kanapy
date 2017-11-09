@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 config = ConfigParser()
 
