@@ -1,10 +1,18 @@
-from setuptools import setup
+# -*- coding: utf-8 -*-
 
-setup(name='kanapy',
-      version='0.0.1',
-      author='Kashif Razzaqui',
-      author_email='kashif.razzaqui@kayako.com',
-      url='https://github.com/kashifrazzaqui/kanapy',
-      description='An HTTP API Client for Kayako',
-      install_requires=['requests']
-      )
+from setuptools import setup, find_packages
+from ConfigParser import ConfigParser
+
+config = ConfigParser()
+
+with open('setup.cfg') as fp:
+    config.readfp(fp, 'setup.cfg')
+
+setup(
+    name=config.get('metadata', 'name'),
+    version=config.get('metadata', 'version'),
+    author=config.get('metadata', 'author'),
+    author_email=config.get('metadata', 'author_email'),
+    packages=find_packages(),
+    install_requires=[each.strip() for each in config.get('options', 'install_requires').split(';')]
+)
