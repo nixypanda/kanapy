@@ -59,47 +59,5 @@ class APIClient(Borg):
             self._session.headers.update({'X-Session-ID':session_id})
 
 
-def _inflate(response, cls, obj=None):
-        response.raise_for_status()
-        if not obj:
-            obj = cls()
-        obj.__dict__ = response.json()['data']
-        return obj, response.json().get('session_id')
-
-
-class Resource:
-    @classmethod
-    def create(cls, obj):
-        raise NotImplementedError()
-
-    @classmethod
-    def delete(cls, id_):
-        """A HTTP DELETE has not been implemented"""
-        raise NotImplementedError()
-
-    @classmethod
-    def get(cls, id):
-        c = APIClient()
-        url = c.get_url(cls, id)
-        r = c.http.get(url)
-        obj, session_id = _inflate(r, cls)
-        c.use_session(session_id)
-        return obj
-
-    @classmethod
-    def all(cls):
-        c = APIClient()
-        url = c.get_url(cls)
-        return c.http.get(url)
-
-    @classmethod
-    def update(cls, obj):
-        """A HTTP PUT has not been implemented"""
-        raise NotImplementedError()
-
-    def get_fields(self):
-        d = vars(self)
-        return { key: d[key] for key in d if not key.startswith('_')}
-
-class User(Resource):
-    _resource_base_url = "/users"
+# c = APIClient(<details>)
+# User.all(), User.get(1)
