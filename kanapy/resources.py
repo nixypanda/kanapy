@@ -49,8 +49,14 @@ class Resource:
         self.resource_type = resource_type
 
     @classmethod
-    def create(cls, obj):
-        raise NotImplementedError()
+    def create(cls, data):
+        c = APIClient()
+        url = c.get_url(cls)
+        response = c.http.post(url, json=data, verify=False)
+        data = response.json()
+        c.use_session(data.get('session_id'))
+
+        return deserialize(data["data"])
 
     @classmethod
     def delete(cls, id_):
@@ -129,7 +135,7 @@ class UserMinimal(Resource):
 
 
 class LocaleField(Resource):
-    _resource_base_url = "/locale/fields"
+    _resource_base_url = "/locale/pyfields"
 
     def __init__(self, locale=None, translation=None, parent_id=None, field=None, **kwargs):
         super().__init__(**kwargs)
